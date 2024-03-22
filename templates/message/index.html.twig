@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message index{% endblock %}
+
+{% block body %}
+    <h1>Message index</h1>
+    <button onclick="window.location.href='{{ path('app_message_from_email') }}'">Read Emails</button>
+    <form action="{{ path('app_message_index') }}" method="get">
+        <label for="sender">Filter by Sender:</label>
+        <input type="text" id="sender" name="sender" value="{{ sender }}" placeholder="Enter sender name">
+        <br>
+        <label for="content">Filter by Content:</label>
+        <input type="text" id="content" name="content" value="{{ content }}" placeholder="Enter message content">
+        <br>
+        <label for="startDate">Filter by Start Date:</label>
+        <input type="date" id="startDate" name="startDate" value="{{ startDate }}" placeholder="Start date">
+        <br>
+        <label for="endDate">Filter by End Date:</label>
+        <input type="date" id="endDate" name="endDate" value="{{ endDate }}" placeholder="End date">
+        <br>
+        <label for="id">Filter by ID:</label>
+        <input type="text" id="id" name="id" value="{{ id }}" placeholder="Enter message ID">
+        <br>
+        <button type="submit">Filter</button>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><a href="{{ path('app_message_index', {'sortBy': 'id', 'orderBy': (sortBy == 'id' and orderBy == 'ASC') ? 'DESC' : 'ASC'}) }}">Id</a></th>
+            <th><a href="{{ path('app_message_index', {'sortBy': 'sender', 'orderBy': (sortBy == 'sender' and orderBy == 'ASC') ? 'DESC' : 'ASC'}) }}">Sender</a></th>
+            <th><a href="{{ path('app_message_index', {'sortBy': 'content', 'orderBy': (sortBy == 'content' and orderBy == 'ASC') ? 'DESC' : 'ASC'}) }}">Content</a></th>
+            <th><a href="{{ path('app_message_index', {'sortBy': 'receivedDate', 'orderBy': (sortBy == 'receivedDate' and orderBy == 'ASC') ? 'DESC' : 'ASC'}) }}">ReceivedDate</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for message in messages %}
+            <tr>
+                <td>{{ message.id }}</td>
+                <td>{{ message.sender }}</td>
+                <td>{{ message.content }}</td>
+                <td>{{ message.receivedDate ? message.receivedDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_message_show', {'id': message.id}) }}">show</a>
+                    <a href="{{ path('app_message_edit', {'id': message.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_message_new') }}">Create new</a>
+
+{% endblock %}
